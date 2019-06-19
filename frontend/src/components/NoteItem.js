@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
+import Truncate from 'react-truncate'
+import Content from './Content'
+    
+class NoteItem extends Component {
+    
 
-const NoteList = (props) => (
-  <li>
-    <h2>Title</h2>
-    <p>Caption...</p>
-  </li>
-);
+    render(){
+      return(
+      <li className = 'noteBox' onClick = {() => this.props.setClickedNote(this.props.note)}>
+        <h2>{this.props.note.title}</h2>
+          <Truncate lines={1} ellipsis={<span>...</span>}>
+              {this.props.note.body}
+          </Truncate> 
+        </li>
+    );
+    }
 
-export default NoteList;
+}
+
+
+
+export default NoteItem;
