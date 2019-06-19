@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Header from './Header';
 import NoteContainer from './NoteContainer';
-const NOTES_URL = 'http://localhost:5000/api/v1/notes'
+import getNotes from '../services/api'
+import api from '../services/api'
 
 
 class App extends Component {
@@ -9,42 +10,26 @@ class App extends Component {
     super()
     this.state = {
       notes: [],
-      currentNotes: [],
-      clickedNote: null
+      currentNotes: []
     }
   }
 
-  
-  searchNotes = (letters) => {
+  componentDidMount(){
+    api.getNotes()
+    .then(data => this.setState({
+        notes: data, currentNotes: data}))
+  }
+
+  searchedNotes = (letters) => {
     const searchNotes = this.state.notes.filter(note => (note.title.toLowerCase().includes(letters.toLowerCase()))||(note.body.toLowerCase().includes(letters.toLowerCase())))
-    console.log('searchNotes triggered')
     searchNotes === null ? this.setState({
        currentNotes: this.state.notes
     }) : this.setState({
       currentNotes: searchNotes
     })
-
   }
 
-    setClickedNote = (note) => {
-      this.setState({
-        clickedNote: note
-      })
-      console.log('set a clicked note')
-    }
-
-    
-    // console.log(this.state.notes.filter(note => note.title.includes(searchLetters)).concat(this.state.notes.filter(note => note.body.includes(searchLetters))))
-    // const newNotes = this.state.notes.filter(note => note.title.includes(searchLetters)).concat(this.state.notes.filter(note => note.body.includes(searchLetters)))
-    // this.setState({
-    //   currentNotes: newNotes
-    // })
-    // return(
-    //   this.state.notes.filter(note => note.title.includes(searchLetters)).concat(this.state.notes.filter(note => note.body.includes(searchLetters)))
-    // )
-  
-
-  attachNewNote = () => {
+    addNewNote = () => {
     const note = {
       id: 12,
       title: "default",
@@ -54,17 +39,7 @@ class App extends Component {
         name: "flatiron"
       }
     }
-    fetch(NOTES_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        title: note.title,
-        body: note.body,
-        user_id: 1
-      })
-    }).then(resp => resp.json())
+    api.postNote(note)
     this.setState({
       notes: [...this.state.notes, note],
       currentNotes: [...this.state.currentNotes, note]
@@ -72,26 +47,22 @@ class App extends Component {
   }
   
   modifyGivenNote = givenNote => {
-      const modifiedNotes = this.state.currentNotes.filter(note => note.id !=  givenNote.id)
+     //remove old version of givenNote by id
+      const modifiedNotes = this.state.currentNotes.filter(note => note.id !==  givenNote.id)
+     // add new version of givenNote
       modifiedNotes.push(givenNote)
+      //update state
       this.setState({
         notes: [...this.state.notes, givenNote],
         currentNotes: modifiedNotes
       })
   }
   
-  componentDidMount(){
-    fetch(NOTES_URL)
-    .then(resp => resp.json())
-    .then(data => this.setState({
-        notes: data, currentNotes: data}))
-  }
-  
   render() {
     return (
       <div className="app">
         <Header />
-        <NoteContainer notes = {this.state.notes} currentNotes = {this.state.currentNotes} createNote= {this.attachNewNote} searchNotes = {this.searchNotes} clickedNote = {this.state.clickedNote} setClickedNote = {this.setClickedNote} modifyGivenNote= {this.modifyGivenNote}/>
+        <NoteContainer currentNotes = {this.state.currentNotes} createNote= {this.addNewNote} searchedNotes = {this.searchedNotes} modifyGivenNote= {this.modifyGivenNote}/>
       </div>
     );
 

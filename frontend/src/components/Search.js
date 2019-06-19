@@ -7,7 +7,7 @@ const Search = (props) => {
         id="search-bar"
         type="text"
         placeholder="Search Notes"
-        onChange = {(event) => props.searchNotes(event.target.value)}/>
+        onChange = {(event) => props.searchedNotes(event.target.value)}/>
     </div>
   );
 }

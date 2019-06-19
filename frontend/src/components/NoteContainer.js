@@ -5,14 +5,26 @@ import Content from './Content';
 
 class NoteContainer extends Component {
   
+  constructor(){
+    super()
+    this.state = {
+      clickedNote: null
+    }
+  }
+  
+  updateClickedNote = note => {
+      this.setState({
+        clickedNote: note
+      })
+  }
   
   render() {
     return (
       <Fragment>
-        <Search searchNotes = {this.props.searchNotes} notes = {this.props.notes}/>
+        <Search searchedNotes = {this.props.searchedNotes}/>
         <div className='container'>
-          <Sidebar notes = {this.props.notes} currentNotes = {this.props.currentNotes} createNote = {this.props.createNote} clickedNote = {this.props.clickedNote} setClickedNote = {this.props.setClickedNote}/>
-          <Content clickedNote = {this.props.clickedNote} modifyGivenNote= {this.props.modifyGivenNote}/>
+          <Sidebar currentNotes = {this.props.currentNotes} createNote = {this.props.createNote} clickedNote = {this.state.clickedNote} updateClickedNote = {this.updateClickedNote}/>
+          <Content clickedNote = {this.state.clickedNote} modifyGivenNote= {this.props.modifyGivenNote}/>
         </div>
       </Fragment>
     );

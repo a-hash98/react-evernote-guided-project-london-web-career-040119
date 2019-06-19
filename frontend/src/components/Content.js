@@ -14,83 +14,47 @@ class Content extends Component {
   
   constructor(props){
     super(props)
-    let noteToRender = props.clickedNote
+    // let currentNote = props.clickedNote
     this.state = {
-      noteToEdit: null,
-      cancelActivated: false,
-      noteToRender: noteToRender
+      currentNote: null,
+      callNoteViewer: true,
+      callNoteEditor: false
     }
   }
-
-  changeNoteToRender = note => {
+ 
+ updateCurrentNote = note => {
     this.setState({
-      noteToRender: note
+      currentNote: note
     })
-  }
-  
-  setEditNote = (note) => {
-    console.log('note state should be set here')
-    this.setState({
-      noteToEdit: note,
-      noteToRender: null
-    })
+    // this.renderContent()
   }
 
-  
-
-  setCancelActivated = () => {
+  toggleViewerEditor = () => {
     this.setState({
-      cancelActivated: !this.state.cancelActivated
+      callNoteViewer: !this.state.callNoteViewer,
+      callNoteEditor: !this.state.callNoteEditor
     })
-    console.log('inside setCancelActivated')
+    this.renderContent()
   }
   
-
   renderContent = () => {
-    //console.log(this.state.noteToRender === this.props.clickedNote)
-    // console.log(this.props)
-    //console.log(this.state.noteToRender)
-    //console.log(this.props.clickedNote)
-    console.log(this.state.noteToEdit)
-    console.log(this.state.noteToRender)
-    console.log(this.state.cancelActivated)
     if (this.props.clickedNote === null) {
       return <Instructions />
     }
-    if (this.state.noteToEdit === null || this.state.noteToRender !== null || !this.state.cancelActivated){
-      console.log("condition 1")
-    // if (this.state.noteToEdit === null || !this.state.cancelActivated || this.state.noteToRender){
-      return <NoteViewer note = {this.props.clickedNote} cancelActivated = {this.state.cancelActivated} setCancelActivated = {this.setCancelActivated} setEditNote = {this.setEditNote} newNote = {this.state.noteToRender}/>
-    } 
-    console.log("condition 2")
-    return <NoteEditor note = {this.state.noteToEdit} newNote = {this.state.noteToRender} cancelActivated = {this.state.cancelActivated} setCancelActivated = {this.setCancelActivated} modifyGivenNote= {this.props.modifyGivenNote} setEditNote = {this.setEditNote} changeNoteToRender = {this.changeNoteToRender}/>
-    
+    if (this.state.callNoteViewer){
+      console.log("calling note viewer")
+      return <NoteViewer note = {this.props.clickedNote} currentNote = {this.state.currentNote} updateCurrentNote = {this.updateCurrentNote} toggleViewerEditor = {this.toggleViewerEditor} callNoteViewer = {this.state.callNoteViewer} callNoteEditor = {this.state.callNoteEditor}/>
+    }
+    if (this.state.callNoteEditor){ 
+      console.log("calling note editor")
+      return <NoteEditor note = {this.state.currentNote} updateCurrentNote = {this.updateCurrentNote} toggleViewerEditor = {this.toggleViewerEditor} callNoteViewer = {this.state.callNoteViewer} callNoteEditor = {this.state.callNoteEditor} modifyGivenNote= {this.props.modifyGivenNote} />
+    }
 
   }
 
-
-    // this.props.clickedNote === null ? <Instructions /> : <NoteViewer note = {this.props.clickedNote} setEditNote = {this.props.setEditNote}/>
-    // if (false) {
-    //   return <NoteEditor  />;
-    // } else if (false) {
-    //   return <NoteViewer note = {this.props.note} />;
-    // } else {
-    //   return <Instructions />;
-    // }
-    
-  
-  
   render() {
     return (
       this.renderContent()
-    // return (
-    //   <div className='master-detail-element detail'>
-    //    if (this.props.clickedNote === null ? <Instructions /> : <NoteViewer note = {this.props.clickedNote} setEditNote = {this.setEditNote} /> }
-    //    <NoteEditor note = {this.state.noteToEdit}/>
-    //    {/* { this.state.noteToEdit !== null ? <NoteEditor note = {this.state.noteToEdit}/> : null} */}
-    //     {/* {this.renderContent()} */}
-    //   </div>
-    // );
     )
 }
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import api from '../services/api';
 const NOTES_URL = 'http://localhost:5000/api/v1/notes'
 
 class NoteEditor extends Component {
@@ -12,9 +13,6 @@ class NoteEditor extends Component {
       title: title,
       body: body
     } 
-    // this.updateTitle = this.updateTitle.bind(this)
-    // this.updateBody = this.updateBody.bind(this)
-   
 }
 
   updateTitle = (e) => {
@@ -33,27 +31,19 @@ class NoteEditor extends Component {
  }
 
  handleSubmit = (e) => {
+  e.preventDefault()
    const note = {
      title: this.state.title,
      body: this.state.body,
      id: this.state.id
    }
-   e.preventDefault()
-   console.log('this is what will be patched')
-    fetch(`${NOTES_URL}/${this.state.id}`, {
-        method: "PATCH", 
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: this.state.id,
-          title: this.state.title,
-          body: this.state.body,
-          user_id: 1
-        })}).then(resp => resp.json())
-            .then(noteObj => {this.props.modifyGivenNote(noteObj)})  
+  
+    api.patchNote(note)
+    .then(noteObj => this.props.modifyGivenNote(noteObj))  
       
-      this.props.changeNoteToRender(note)
+      this.props.updateCurrentNote(note)
+      this.props.toggleViewerEditor()
+
  }
 
   render() {
@@ -63,7 +53,9 @@ class NoteEditor extends Component {
         <textarea name="body" defaultValue={this.state.body} onChange= {this.updateBody}/>
         <div className="button-row">
           <input className="button" onClick = {this.handleSubmit} type="submit" value="Save"/>
-          <button type="button" onClick= {() => this.props.setCancelActivated()}>Cancel</button>
+          <button type="button" onClick= {() => this.props.toggleViewerEditor()}>Cancel</button>
+          
+
         </div>
     </form>
     )}

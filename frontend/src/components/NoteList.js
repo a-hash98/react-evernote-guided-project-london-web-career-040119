@@ -4,18 +4,11 @@ import Content from './Content'
 
 const NoteList = (props) => {
   
-  const handleClick = note => {
-        {console.log('i was clicked')}
-        // <Content note = {note}/>
-  }
-  const handleClickTwo = () => {
-    {console.log('clicked')}
-  }
 
   return (
     <ul>
       {props.currentNotes.map(note => 
-          <NoteItem note = {note} clickedNote = {props.clickedNote} setClickedNote = {props.setClickedNote}/>
+        <NoteItem note = {note} clickedNote = {props.clickedNote} updateClickedNote = {props.updateClickedNote}/>
       )}
     </ul>
   );
